@@ -110,6 +110,9 @@ def _setup_deb_general():
         "deb http://nebc.nox.ac.uk/bio-linux/ unstable bio-linux", # Bio-Linux
         "deb http://download.virtualbox.org/virtualbox/debian %s contrib"
     ]
+    # Allow for fabricrc based extensions to source list.
+    for source in [source for source in env.get("extra_sources", "").split(",") if source]:
+        shared_sources.append(source)
     return shared_sources
 
 def _setup_centos():
