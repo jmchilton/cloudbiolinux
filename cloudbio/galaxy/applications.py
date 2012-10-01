@@ -20,7 +20,7 @@ from fabric.api import sudo, run, cd
 from fabric.contrib.files import exists
 
 from cloudbio.custom.shared import _make_tmp_dir, _if_not_installed, _set_default_config
-from cloudbio.custom.shared import _get_install, _configure_make
+from cloudbio.custom.shared import _get_install, _configure_make, _make_copy, _fetch_and_unpack
 
 
 @_if_not_installed(None)
@@ -370,6 +370,17 @@ def install_eigenstrat(env):
             install_cmd("mv bin %s" % install_dir)
     sudo("echo 'PATH=%s/bin:$PATH' > %s/env.sh" % (install_dir, install_dir))
     _update_default(env, install_dir)
+
+
+
+@_if_not_installed("augustus")
+def install_augustus(env):
+    version = env.tool_version
+    url = "http://bioinf.uni-greifswald.de/augustus/binaries/augustus.%s.tar.gz" % version
+    with _make_tmp_dir() as work_dir:
+        with cd(work_dir):
+            _fetch_and_unpack(url, need_dir=False)
+            _make_copy(find_cmd="find bin scripts -perm -100 -type f", do_make=False)(env)
 
 
 @_if_not_installed("SortSam.jar")
