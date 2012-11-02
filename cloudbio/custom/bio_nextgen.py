@@ -493,13 +493,14 @@ def _install_boost(env):
         run("./bootstrap.sh --prefix=%s --with-libraries=thread" % boost_dir)
         run("./b2")
         env.safe_sudo("./b2 install")
-    if not exists(boost_version_file) or not contains(boost_version_file, check_version):
+    thread_lib = "libboost_thread.so.%s" % version
+    final_thread_lib = os.path.join(env.system_install, "lib", thread_lib)
+    if (not exists(boost_version_file) or not contains(boost_version_file, check_version)
+        or not exists(final_thread_lib)):
         _get_install(url, env, _boost_build)
-        thread_lib = "libboost_thread.so.%s" % version
-        final_lib = os.path.join(env.system_install, "lib", thread_lib)
         orig_lib = os.path.join(boost_dir, "lib", thread_lib)
-        if not exists(final_lib):
-            env.safe_sudo("ln -s %s %s" % (orig_lib, final_lib))
+        if not exists(final_thread_lib):
+            env.safe_sudo("ln -s %s %s" % (orig_lib, final_thread_lib))
 
 def _cufflinks_configure_make(env):
     orig_eigen = "%s/include/eigen3" % env.system_install
@@ -518,7 +519,7 @@ def install_tophat(env):
     """
     _install_samtools_libs(env)
     _install_boost(env)
-    default_version = "2.0.4"
+    default_version = "2.0.5"
     version = env.get("tool_version", default_version)
     url = "http://tophat.cbcb.umd.edu/downloads/tophat-%s.tar.gz" % version
     _get_install(url, env, _cufflinks_configure_make)
@@ -580,6 +581,19 @@ def install_velvet(env):
         sed("Makefile", "Z_LIB_FILES=-lz", "Z_LIB_FILES=-lz -lm")
     _get_install(url, env, _make_copy("find -perm -100 -name 'velvet*'"),
                  post_unpack_fn=_fix_library_order)
+
+@_if_not_installed("Ray")
+def install_ray(env):
+    """Ray -- Parallel genome assemblies for parallel DNA sequencing 
+    http://denovoassembler.sourceforge.net/
+    """
+    default_version = "2.1.0"
+    version = env.get("tool_version", default_version)
+    url = "http://downloads.sourceforge.net/project/denovoassembler/Ray-v%s.tar.bz2" % version
+    def _ray_do_nothing(env):
+        return
+    _get_install(url, env, _make_copy("find -name Ray"),
+                 post_unpack_fn=_ray_do_nothing)
 
 def install_trinity(env):
     """Efficient and robust de novo reconstruction of transcriptomes from RNA-seq data.
