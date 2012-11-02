@@ -9,7 +9,7 @@ from fabric.contrib.files import append
 from shared import (_if_not_installed, _make_tmp_dir,
                     _get_install, _get_install_local, _make_copy, _configure_make,
                     _java_install, _symlinked_java_version_dir,
-                    _get_bin_dir,
+                    _get_bin_dir, _get_install_subdir,
                     _fetch_and_unpack, _python_make)
 import re
 
@@ -93,7 +93,7 @@ def install_openms(env):
 
 @_if_not_installed("LTQ-iQuant")
 def install_tint_proteomics_scripts(env):
-    default_version = "1.19.12"
+    default_version = "1.19.14"
     version = env.get("tool_version", default_version)
     url = "http://artifactory.msi.umn.edu/simple/ext-release-local/msi/umn/edu/tint-proteomics-scripts/%s/tint-proteomics-scripts-%s.zip" % (version, version)
 
@@ -136,6 +136,23 @@ def install_mzmine(env):
         env.safe_sudo("ln -s '%s' %s" % (os.path.join(install_dir, "startMZmine_Linux.sh"), os.path.join(bin_dir, "MZmine")))
 
     _java_install("mzmine2", version, url, env, install_fn)
+
+
+@_if_not_installed("Mayu")
+def install_mayu(env):
+    default_version = "1.06"
+    version = env.get("tool_version", default_version)
+    url = "http://proteomics.ethz.ch/muellelu/web/LukasReiter/Mayu/package/Mayu.zip"
+
+    def install_fn(env, install_dir):
+        share_dir = _get_install_subdir(env, "share")
+        env.safe_sudo("mv Mayu '%s'" % share_dir)
+        bin_dir = _get_bin_dir(env)
+        executable = "%s/Mayu" % bin_dir
+        env.safe_sudo("""echo '#!/bin/bash\ncd %s/Mayu; perl Mayu.pl \"$@\"' > %s """ % (share_dir, executable))
+        env.safe_sudo("chmod +x '%s'" % executable)
+
+    _unzip_install("mayu", version, url, env, install_fn)
 
 
 def install_pride_inspector(env):
@@ -266,3 +283,4 @@ def _install_tabb_tool(env, default_version, download_name, exec_names):
     env.safe_sudo("mkdir -p '%s/bin'" % env["system_install"])
     for exec_name in exec_names:
         env.safe_sudo("mv %s '%s/bin'" % (exec_name, env["system_install"]))
+

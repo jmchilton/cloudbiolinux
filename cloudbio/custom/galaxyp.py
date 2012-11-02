@@ -23,6 +23,7 @@ def install_proteomics_tools(env):
 def install_protk(env):
     """Installs Ira Cooke's ProtK framework for the
     galaxy user"""
+    _prep_galaxy(env)
     default_version = "0.95@e81050c1c658"
     version_and_revision = env.get("protk_version", default_version)
     (version, revision) = version_and_revision.split("@")
@@ -46,9 +47,9 @@ def install_protk(env):
         get("%s/config.yml.sample" % install_dir, output)
         sample_config = yaml.load(output.getvalue())
         sample_config['test']['tpp_bin'] = os.path.join(env.galaxy_tools_dir, "transproteomic_pipeline", "default", "bin")
-        sample_config['test']['omssa_bin'] = os.path.join(env.galaxy_tools_dir, "omssa", "default")
-        sample_config['test']['ncbi_tools_bin'] = os.path.join(env.galaxy_tools_dir, "blast", "default")
-        sample_config['test']['openms_bin'] = os.path.join(env.galaxy_tools_dir, "openms", "default")
+        sample_config['test']['omssa_bin'] = os.path.join(env.galaxy_tools_dir, "omssa", "default", "bin")
+        sample_config['test']['ncbi_tools_bin'] = os.path.join(env.galaxy_tools_dir, "blast", "default", "bin")
+        sample_config['test']['openms_bin'] = os.path.join(env.galaxy_tools_dir, "openms", "default", "bin")
         #sample_config['test']['galaxy_root']=env.galaxy_home
         _write_to_file(yaml.dump(sample_config), "%s/config.yml" % install_dir, 0755)
         with cd(install_dir):

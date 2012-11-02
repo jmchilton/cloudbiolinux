@@ -7,7 +7,7 @@ applications:
         - cgi-bin
   openms: "1.9.0"
   omssa: "2.1.9"
-  tint_proteomics_scripts: "1.19.12"
+  tint_proteomics_scripts: "1.19.14"
   superhirn: "0.03"
   mzmine: "2.9.1"
   percolator: "2_04"
@@ -20,3 +20,4 @@ applications:
   pride_inspector: "1.2.4"
   pride_converter2: "2.0.6"
   ms2preproc: "2009"
+  mayu: "1.06"
