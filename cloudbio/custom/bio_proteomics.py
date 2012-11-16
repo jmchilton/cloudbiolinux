@@ -218,6 +218,22 @@ def install_percolator(env):
     _get_install(url, env, make)
 
 
+@_if_not_installed("PepNovo")
+def install_pepnovo(env):
+    default_version = "20120423"
+    version = env.get("tool_version", default_version)
+    url = "http://proteomics.ucsd.edu/Downloads/PepNovo.20120423.zip"
+
+    def install_fn(env, install_dir):
+        with cd("src"):
+            run("make")
+            env.safe_sudo("mkdir -p '%s/bin'" % env.system_install)
+            env.safe_sudo("mkdir -p '%s/share/pepnovo'" % env.system_install)
+            env.safe_sudo("mv PepNovo_bin '%s/bin/PepNovo'" % env.system_install)
+            env.safe_sudo("cp -r '../Models' '%s/share/pepnovo'" % env.system_install)
+
+    _unzip_install("pepnovo", version, url, env, install_fn)
+
 @_if_not_installed("Fido")
 def install_fido(env):
     version = "2011"
@@ -283,4 +299,3 @@ def _install_tabb_tool(env, default_version, download_name, exec_names):
     env.safe_sudo("mkdir -p '%s/bin'" % env["system_install"])
     for exec_name in exec_names:
         env.safe_sudo("mv %s '%s/bin'" % (exec_name, env["system_install"]))
-

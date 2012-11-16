@@ -384,7 +384,7 @@ def install_augustus(env):
             env.safe_sudo("mkdir -p '%s'" % install_dir)
             env.safe_sudo("mv * '%s'" % install_dir)
     env.safe_sudo("echo 'PATH=%s/bin:%s/scripts:$PATH' > %s/env.sh" % (install_dir, install_dir, install_dir))
-    env.safe_sudo("echo 'AUGUSTUS_CONFIG_PATH=%s/config' >> %s/env.sh" % (install_dir, install_dir))
+    env.safe_sudo("echo 'export AUGUSTUS_CONFIG_PATH=%s/config' >> %s/env.sh" % (install_dir, install_dir))
     _update_default(env, install_dir)
 
 
