@@ -1,0 +1,6 @@
+---
+packages:
+  - minimal
+  - bio_proteomics
+  - cloudman
+libraries:
