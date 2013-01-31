@@ -1,0 +1,7 @@
+---
+packages:
+  - minimal
+#  - bio_proteomics
+  - bio_proteomics_wine
+  - tint
+libraries:

@@ -1,1 +1,4 @@
+---
 minimal:
+tint:
+  - tint::rawextract

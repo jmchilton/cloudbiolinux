@@ -1,0 +1,6 @@
+[submodule "config/puppet/modules/tomcat"]
+	path = config/puppet/modules/tomcat
+	url = git://github.com/jmchilton/puppet-tomcat.git
+[submodule "config/puppet/modules/tint"]
+	path = config/puppet/modules/tint
+	url = git://github.com/jmchilton/puppet-tint.git
