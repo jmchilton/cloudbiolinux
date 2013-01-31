@@ -1,1 +1,6 @@
 minimal:
+globus:
+  - globus::client-tools
+  - globus::myproxy
+## gridftp cookbook requires stuff setup by globus-provision
+#  - globus::gridftp-default
