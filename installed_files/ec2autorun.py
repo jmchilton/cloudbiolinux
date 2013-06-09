@@ -415,6 +415,9 @@ def _handle_yaml(user_data):
     """ Process user data in YAML format"""
     log.info("Handling user data in YAML format.")
     ud = _load_user_data(user_data)
+    if "skip_cloudman" in ud and ud["skip_cloudman"]:
+        return
+
     # Handle bad user data as a string
     if ud == user_data:
         return _handle_empty()

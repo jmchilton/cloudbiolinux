@@ -22,6 +22,7 @@ ARG_PROPERTIES = [
 
   # CloudMan options
   "target_bucket",
+  "skip_cloudman",
 ]
 
 
@@ -57,6 +58,7 @@ def parse_args():
 
     # CloudMan related options
     parser.add_argument("--target_bucket", dest="target_bucket", default=None, help="Specify a target bucket for CloudMan bucket related actions.")
+    parser.add_argument("--skip_cloudman", dest="skip_cloudman", default=False, action="store_true", help="Launch a CloudMan AMI, but do not run cloudman at startup. Useful for altering clean image and repackaging with changes.")
 
     args = parser.parse_args()
     if len(args.actions) == 0:

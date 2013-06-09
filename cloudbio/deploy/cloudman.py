@@ -63,14 +63,15 @@ def cloudman_launch(vm_launcher, options):
         image_id = deployments[0]["default_mi"]
 
     size_id = cloudman_options.get('size_id', None)
-    user_data = _prepare_user_data(vm_launcher, cloudman_options)
+    user_data = _prepare_user_data(vm_launcher, options)
     vm_launcher.create_node('cloudman',
                             image_id=image_id,
                             size_id=size_id,
                             ex_userdata=user_data)
 
 
-def _prepare_user_data(vm_launcher, cloudman_options):
+def _prepare_user_data(vm_launcher, options):
+    cloudman_options = options.get('cloudman')
     cloudman_user_data = cloudman_options.get('user_data', {})
     cluster_name = \
         cloudman_options.get('cluster_name', DEFAULT_CLOUDMAN_CLUSTER_NAME)
@@ -83,6 +84,9 @@ def _prepare_user_data(vm_launcher, cloudman_options):
     cluster_name = eval_template(env, cluster_name)
     _set_property_if_needed(cloudman_user_data, 'cluster_name', cluster_name)
     _set_property_if_needed(cloudman_user_data, 'password', password)
+
+    if not options.get("skip_cloudman", False):
+        cloudman_user_data["skip_cloudman"] = True
 
     return yaml.dump(cloudman_user_data)
 
